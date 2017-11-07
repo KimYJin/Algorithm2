@@ -34,39 +34,42 @@ N과 비용 행렬이 주어졌을 때, 가장 적은 비용을 들이는 외판원의 순회 여행 경로를 �
 
 #define _CRT_SECURE_NO_WARNINGS
 #include<stdio.h>
+#include<string.h>
 #define MAX 10
 #define false 0
 #define true 1
 
-int nextPermutation(int a[], int n)
+int c[MAX] = { 0 };
+
+int nextPermutation(int begin, int n)
 {
 	int i, j, temp;
 
 	i = n - 1;
-	while (a[i - 1] >= a[i] && i > 0)
+	while (c[i - 1] >= c[i] && i > begin)  //// reduce time complexity. O(N*N!)-> O(N!)
 	{
 		i--;
 	}
 
-	if (i <= 0)
+	if (i <= begin)  //// reduce time complexity. O(N*N!)-> O(N!)
 		return 0;
 
 	j = n - 1;
-	while (a[i - 1] >= a[j])
+	while (c[i - 1] >= c[j])
 	{
 		j--;
 	}
 
-	temp = a[i - 1];
-	a[i - 1] = a[j];
-	a[j] = temp;
+	temp = c[i - 1];
+	c[i - 1] = c[j];
+	c[j] = temp;
 
 	j = n - 1;
 	while (i < j)
 	{
-		temp = a[i];
-		a[i] = a[j];
-		a[j] = temp;
+		temp = c[i];
+		c[i] = c[j];
+		c[j] = temp;
 
 		i++;
 		j--;
@@ -78,7 +81,6 @@ int main(void)
 {
 	int n, i,j,min, sum,ok;
 	int w[MAX][MAX];
-	int c[MAX] = { 0 };
 
 	scanf("%d", &n);
 
@@ -121,7 +123,7 @@ int main(void)
 				min = sum;
 		}
 
-	} while (nextPermutation(c, n));
+	} while (nextPermutation(1, n));   //// reduce time complexity. O(N*N!)-> O(N!)
 
 	printf("%d", min);
 
