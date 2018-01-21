@@ -63,6 +63,7 @@ int main() {
 		}
 	}
 	cout << dist[m] << '\n';
-	return 0;
+	//return 0;
+	for (;;);
 }
 
