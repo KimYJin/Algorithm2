@@ -4,6 +4,7 @@
 네 개의 명령어 D, S, L, R 을 이용하는 간단한 계산기가 있다. 이 계산기에는 레지스터가 하나 있는데,
 이 레지스터에는 0 이상 10,000 미만의 십진수를 저장할 수 있다.각 명령어는 이 레지스터에 저장된 n을 다음과 같이 변환한다.
 n의 네 자릿수를 d1, d2, d3, d4라고 하자(즉 n = ((d1 × 10 + d2) × 10 + d3) × 10 + d4라고 하자)
+
 1.D: D 는 n을 두 배로 바꾼다.결과 값이 9999 보다 큰 경우에는 10000 으로 나눈 나머지를 취한다.
 그 결과 값(2n mod 10000)을 레지스터에 저장한다.
 2.S : S 는 n에서 1 을 뺀 결과 n - 1을 레지스터에 저장한다. n이 0 이라면 9999 가 대신 레지스터에 저장된다.
@@ -25,7 +26,6 @@ n의 네 자릿수를 d1, d2, d3, d4라고 하자(즉 n = ((d1 × 10 + d2) × 10 + d3) × 1
 n의 자릿수로 0 이 포함된 경우에 주의해야 한다.예를 들어서 1000 에 L 을 적용하면 0001 이 되므로 결과는 1 이 된다.
 그러나 R 을 적용하면 0100 이 되므로 결과는 100 이 된다.
 
-
 입력
 프로그램 입력은 T 개의 테스트 케이스로 구성된다.테스트 케이스 개수 T 는 입력의 첫 줄에 주어진다.
 각 테스트 케이스로는 두 개의 정수 A와 B(A ≠ B)가 공백으로 분리되어 차례로 주어지는데
@@ -46,101 +46,108 @@ L
 DDDD
 */
 
+
 #include<iostream>
 #include<queue>
-#include <cstring> 
+#include<string>
 
 using namespace std;
-bool check[10000];
-int from[10000];
-char how[10000];
 
+const int MAX = 10000;
+
+int from[MAX + 1];
+char how[MAX + 1];
+bool check[MAX + 1];
 
 int main(void)
 {
-	int t, n1, n2;
+	int t,a,b;
 	int now, next;
 
 	cin >> t;
 
 	while (t--)
 	{
-		cin >> n1 >> n2;
-
-		memset(check, false, sizeof(check));
 		memset(from, 0, sizeof(from));
 		memset(how, 0, sizeof(how));
+		memset(check, false, sizeof(check));
+
+		cin >> a >> b;
 
 		queue<int> q;
-		q.push(n1);
-		check[n1] = true;
-		from[n1] = 0;
-
+		q.push(a);
+		check[a] = true;
+		from[a] = -1;
+		
 		while (!q.empty())
 		{
 			now = q.front();
 			q.pop();
 
-			//D 는 n을 두 배로 바꾼다.결과 값이 9999 보다 큰 경우에는 10000 으로 나눈 나머지를 취한다.
+			// D
 			next = (now * 2) % 10000;
-
-			if (check[next] == false) {
+			
+			if (check[next] != true)
+			{
 				q.push(next);
 				check[next] = true;
-				from[next] = now;
 				how[next] = 'D';
+				from[next] = now;
 			}
 
-			//S 는 n에서 1 을 뺀 결과 n - 1을 레지스터에 저장한다.n이 0 이라면 9999 가 대신 레지스터에 저장된다.
+			// S
 			if (now == 0)
 				next = 9999;
 			else
 				next = now - 1;
 
-			if (check[next] == false) {
+			if (check[next] != true)
+			{
 				q.push(next);
 				check[next] = true;
-				from[next] = now;
 				how[next] = 'S';
+				from[next] = now;
 			}
 
-			//L 은 n의 각 자릿수를 왼편으로 회전시켜 그 결과를 레지스터에 저장한다.
-			next = (now % 1000) * 10 + (now / 1000);
+			// L
+			next = (now%1000) * 10 + (now/1000);
 
-			if (check[next] == false) {
+			if (check[next] != true)
+			{
 				q.push(next);
 				check[next] = true;
-				from[next] = now;
 				how[next] = 'L';
+				from[next] = now;
 			}
 
-			//R : R 은 n의 각 자릿수를 오른편으로 회전시켜 그 결과를 레지스터에 저장한다.
-			next = (now % 10) * 1000 + (now / 10);
+			// R
+			next = (now%10) * 1000 + (now/10);
 
-			if (check[next] == false) {
+			if (check[next] != true)
+			{
 				q.push(next);
 				check[next] = true;
-				from[next] = now;
 				how[next] = 'R';
+				from[next] = now;
 			}
-
-			if (check[n2] == true)
-				break;
 
 		}//end while
 
-		string ans = "";
 
-		while (from[n2] != 0)
+		string result = "";
+		
+		int n = b;
+
+		while (from[n] != -1)
 		{
-			ans += how[n2];
-			n2 = from[n2];
+			result += how[n];
+			n = from[n];
 		}
-		reverse(ans.begin(),ans.end());
-
-		cout << ans<<endl;
+		reverse(result.begin(), result.end());
+		cout << result << endl;
 
 	}//end while
 
 	return 0;
 }
+
