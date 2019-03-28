@@ -19,11 +19,11 @@ Output: [24,12,8,6]
 Note: Please solve it without division and in O(n).
 
 Follow up:
- Could you solve it with constant space complexity? (The output array does not count as extra space for the purpose of space complexity analysis.)
+Could you solve it with constant space complexity? (The output array does not count as extra space for the purpose of space complexity analysis.)
 */
 
-vector<int> productExceptSelf(vector<int>& nums) {
 
+vector<int> productExceptSelf(vector<int>& nums) {
 		int size = nums.size();
 		vector<int> answer(size, 1);
 
@@ -44,9 +44,16 @@ vector<int> productExceptSelf(vector<int>& nums) {
 
 		if (zero_count == 0)
 		{
+			int x = 1, y = 1;
 			for (int i = 0; i<size; i++)
 			{
-				answer[i] = all_except_zero / nums[i];
+				answer[i] = x;
+				x = x * nums[i];
+			}
+			for (int i = size - 1; i >= 0; i--)
+			{
+				answer[i] *= y;
+				y = y * nums[i];
 			}
 		}
 		else if (zero_count == 1)
@@ -59,7 +66,7 @@ vector<int> productExceptSelf(vector<int>& nums) {
 					answer[i] = 0;
 			}
 		}
-		else
+		else //zero_count > 1
 		{
 			answer.assign(size, 0);
 		}
@@ -67,10 +74,11 @@ vector<int> productExceptSelf(vector<int>& nums) {
 		return answer;
 }
 
+
 int main(void)
 {
 	vector<int> nums;
-	nums.push_back(0);
+	nums.push_back(1);
 	nums.push_back(2);
 	nums.push_back(3);
 	nums.push_back(4);
@@ -80,7 +88,7 @@ int main(void)
 	vector<int> answer = productExceptSelf(nums);
 
 	for (int i = 0; i < size; i++)
-		cout << answer[i]<<endl;
+		cout << answer[i] << endl;
 
 	for (;;);
 	return 0;
