@@ -17,16 +17,16 @@ int main()
 	
 	dp[1] = 0;
 
-	//Bottom-up
+	//BottomUp
 	for (int i = 2; i <= n; i++)
 	{		
 		// 값이 정해져있지 않으면 가능한 방법 중 최솟값
 		dp[i] = dp[i - 1]+1;
 
-		if (i % 3 == 0 && dp[i] > dp[i/3]+1)
+		if (i % 3 == 0 && dp[i] > dp[i/3]+1) //더 작은 case에만 계산
 			dp[i] = dp[i / 3]+1;
 		
-		if (i % 2 == 0 && dp[i] > dp[i/2] + 1)
+		if (i % 2 == 0 && dp[i] > dp[i/2] + 1) //더 작은 case에만 계산
 			dp[i] = dp[i / 2]+1;
 	}
 
